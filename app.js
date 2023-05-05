@@ -3,7 +3,7 @@ const heroes = [
         name: 'Slate Slabrock',
         type: 'tank',
         damage: 5,
-        maxHealth: 100,
+        maxHealth: 1,
         damageTaken: 0,
         level: 1,
         avatar: 'https://pbs.twimg.com/media/CqnP8yuVIAE-yGq.png:large'
@@ -12,7 +12,7 @@ const heroes = [
         name: 'Flint Ironstag',
         type: 'aggro',
         damage: 10,
-        maxHealth: 50,
+        maxHealth: 1,
         damageTaken: 0,
         level: 1,
         avatar: 'https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi.pinimg.com%2Foriginals%2F64%2F15%2Fd3%2F6415d32fde1d3dadb654a4fc023c8b5f.png&f=1&nofb=1&ipt=a4dfca89fc398ae79e34f56065a1d427b60d969778b55bef1105fdfa3fb184e6&ipo=images'
@@ -21,7 +21,7 @@ const heroes = [
         name: 'John Evergood',
         type: 'healer',
         damage: 5,
-        maxHealth: 50,
+        maxHealth: 1,
         damageTaken: 0,
         level: 1,
         avatar: 'https://img.itch.zone/aW1hZ2UvMzc3NjMzLzE4OTA1NTkucG5n/347x500/wM1Aic.png'
@@ -112,7 +112,7 @@ function heroTemplate(){
     template += `
 
 <div id="" class="col-12 col-md-6 col-lg-3 p-3 hero-container container-fluid">
-    <div id="${h.name}" class="hero-card row">
+    <div id="${h.name}" class="hero-card row" onclick="invokeHeal('${h.name}')">
         <div class="col-8">
             <div for="hero title" class="title d-flex flex-row">
                 <h4 for="name" class="name">
@@ -153,12 +153,22 @@ function heroTemplate(){
 function drawHeroHealth(index) {
     let hero = heroes[index]
     let hp = hero.maxHealth - hero.damageTaken
+    let percentage = (hp/hero.maxHealth)*100
+    let template = `
+                background: linear-gradient(90deg, rgba(10,121,9,1) ${percentage}%, 
+                rgb(59, 59, 59) 0%);`
 
     if (hp <= 0){
         hp = 0
+        template = `
+        background: rgb(59, 59, 59);
+        -webkit-filter: grayscale(100%);
+        filter: grayscale(100%);
+        `
     }
 
     document.getElementById(hero.name + ' Health').innerText = hp
+    document.getElementById(hero.name).style = template;
 }
 
 // This function imports data from the boss array and 
@@ -215,6 +225,7 @@ function damageBoss(){
         randomHeroLevelUp(levelUp)
 
         if(bosses.length <= currentBossIndex){
+            bossTemplate()
             console.log('You have defeated all the monsters');
             window.alert('You have slain all the monsters!')
             currentBossIndex = bosses.length - 1
@@ -257,9 +268,20 @@ function heroDamageOutput(){
 
     if (damageOutput <= 0){
         console.log('defeat')
-        window.alert('You have been slain by the monsters!')
         stopGame()
-        return
+        gameOver()
+    }
+}
+
+function invokeHeal(hero){
+    for (let i = 0; i<heroes.length; i++){
+        if(heroes[i].name == hero && heroes[i].damageTaken <= heroes[i].maxHealth){
+                heroes[i].damageTaken -= Math.floor(heroes[i].maxHealth*0.03)
+            if(heroes[i].damageTaken<=0){
+                heroes[i].damageTaken = 0
+            }
+            drawHeroHealth(i)
+        }
     }
 }
 
@@ -350,6 +372,9 @@ function stopGame(){
     clearInterval(bossRetaliatesInterval)
 }
 
+function gameOver(){
+    
+}
 heroTemplate()
 bossTemplate()
 heroDamageOutput()

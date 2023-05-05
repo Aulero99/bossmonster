@@ -5,10 +5,15 @@ body {
     background-image: url(https://i.redd.it/6cejpx6as6y21.png);
     background-attachment: fixed;
     background-size: cover;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
  
 .boss-container {
-    width: 100%;
+    width: 93%;
+    margin: auto;
 }
 
 .boss-card {
@@ -19,7 +24,7 @@ body {
     background-size: cover;
     overflow: hidden;
     border: 0;
-    max-height: 70vh;
+    max-height: 60vh;
 }
 
 .boss-container .boss-card .health .remaining {
@@ -40,16 +45,21 @@ body {
 .boss-container .boss-card .name {
     font-weight: bolder;
     text-align: center;
+    flex-grow: 1;
 }
 
 .boss-container .avatar {
     text-align: center;
+    flex-grow: 1;
+    height: 40vh;
+    padding-bottom: 1rem;
 }
 
 .boss-container .avatar img{
     padding: 0;
-    height: 50vh;
-    min-height: 25rem;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
 }
 
 
@@ -65,13 +75,18 @@ body {
 
 
 .hero-container .hero-card {
-    background: #303030;
-    background: linear-gradient(90deg, rgba(10,121,9,1) 100%, 
-                rgb(59, 59, 59) 50%);
     border: white solid 0.4rem;
     border-radius: 1.7rem;
     padding: 0.5rem;
     min-width: 200px;
+    transition: 200ms;
+}
+
+.hero-card .healthbar {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+
 }
 
 .hero-container .hero-card .title .name {
